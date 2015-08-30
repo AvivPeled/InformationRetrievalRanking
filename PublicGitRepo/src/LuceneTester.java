@@ -12,8 +12,8 @@ import readingInputFiles.ReadingQueriesFile;
 
 public class LuceneTester {
 	
-   static String  dataDir= "D:\\Lucene\\Index";
-   String  indexDir= "D:\\Lucene\\Data";
+   static String  dataDir= "C:\\Lucene\\Index";
+   String  indexDir= "C:\\Lucene\\Data";
    Indexer indexer;
    
    public static void main(String[] args) throws ParseException {

@@ -1,4 +1,4 @@
-queryFile=queries.txt
-docsFile=docs.txt
+queryFile=queries_test.txt
+docsFile=docs_test.txt
 outpotFile=output.txt
 retrievalAlgorithm=basic

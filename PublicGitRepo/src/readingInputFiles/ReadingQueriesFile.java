@@ -13,8 +13,6 @@ public class ReadingQueriesFile {
 	public ReadingQueriesFile(String queryFileName)
 	{
 		this.queriesFileName = queryFileName;
-		numberQueries = 30;
-		dictNumberQueryToQuery = new String [numberQueries];
 	}
 	
 	public String[] getDictonaryNumberQueryToQuery()
@@ -34,14 +32,15 @@ public class ReadingQueriesFile {
 		content = new String(bytesContentFile);
 		
 		splitedContentByIndex = content.split(".I");
-		
+		numberQueries = splitedContentByIndex.length - 1;
+		dictNumberQueryToQuery = new String [numberQueries];
 		while(index <= numberQueries)
 		{
-			numberQueryWithConent = splitedContentByIndex[index].split(".W\r\n");
+			numberQueryWithConent = splitedContentByIndex[index].split(".W"+InputConstants.LINE_FEED);
 			if(isNumeric(numberQueryWithConent[0]))
 				{
 				
-					dictNumberQueryToQuery[index-1]=numberQueryWithConent[1].replace("\r\n", " ");
+					dictNumberQueryToQuery[index-1]=numberQueryWithConent[1].replace(InputConstants.LINE_FEED, " ");
 				}
 			index++;
 		}

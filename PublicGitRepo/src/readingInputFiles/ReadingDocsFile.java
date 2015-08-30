@@ -21,8 +21,6 @@ public class ReadingDocsFile {
 	ReadingDocsFile(String docFileName)
 	{
 		this.docsFileName=docFileName;
-		numberDocs=1033;
-		dictNumberDocToContent = new String [numberDocs];
 		
 	}
 	
@@ -42,13 +40,14 @@ public class ReadingDocsFile {
 		content = new String(bytesContentFile);
 		
 		splitedContentByIndex = content.split(".I");
-		
+		numberDocs=splitedContentByIndex.length - 1;
+		dictNumberDocToContent = new String [numberDocs];
 		while(index <= numberDocs)
 		{
-			numberQueryWithConent = splitedContentByIndex[index].split(".W\r\n");
+			numberQueryWithConent = splitedContentByIndex[index].split(".W"+InputConstants.LINE_FEED);
 			if(isNumeric(numberQueryWithConent[0]))
 				{
-					dictNumberDocToContent[index-1]=numberQueryWithConent[1].replace("\r\n", " ");
+					dictNumberDocToContent[index-1]=numberQueryWithConent[1].replace(InputConstants.LINE_FEED, " ");
 				}
 			index++;
 		}

@@ -1,9 +1,11 @@
 package readingInputFiles;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 
 /*
@@ -52,25 +54,15 @@ public class ReadingParameterFile {
 	
 	public void readFile() throws IOException 
 	{
+		Properties prop = new Properties();
+		FileInputStream fis = new FileInputStream(this.parameterFileName);
 		
-		String content;
-		String [] splitedContent;
-		byte[] bytesContentFile;
-		Path pathParameterFile = Paths.get(parameterFileName);
-		bytesContentFile = Files.readAllBytes(pathParameterFile);
-		content = new String(bytesContentFile);
+		prop.load(fis);
 		
-		splitedContent = content.split("queryFile=");
-		queryFileName = splitedContent[1].split("\r\n")[0];
-		
-		splitedContent = content.split("docsFile=");
-		docsFileName = splitedContent[1].split("\r\n")[0];
-		
-		splitedContent = content.split("outpotFile=");
-		outputFileName = splitedContent[1].split("\r\n")[0];
-		
-		splitedContent = content.split("retrievalAlgorithm=");
-		retrievalAlgorithmType = splitedContent[1].split("\r\n")[0];
+		queryFileName = prop.getProperty("queryFile");
+		docsFileName = prop.getProperty("docsFile");
+		outputFileName = prop.getProperty("outpotFile");
+		retrievalAlgorithmType = prop.getProperty("retrievalAlgorithm");
 
 	}
 	
