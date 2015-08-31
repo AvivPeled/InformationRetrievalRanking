@@ -1,0 +1,84 @@
+.I 1
+.W
+correlation between maternal and fetal plasma levels of glucose and free
+fatty acids .                                                           
+  correlation coefficients have been determined between the levels of   
+glucose and ffa in maternal and fetal plasma collected at delivery .    
+significant correlations were obtained between the maternal and fetal   
+glucose levels and the maternal and fetal ffa levels . from the size of 
+the correlation coefficients and the slopes of regression lines it      
+appears that the fetal plasma glucose level at delivery is very strongly
+dependent upon the maternal level whereas the fetal ffa level at        
+delivery is only slightly dependent upon the maternal level .           
+.I 2
+.W
+changes of the nucleic acid and phospholipid levels of the livers in the
+course of fetal and postnatal development .                             
+  we have followed the evolution of dna, rna and pl in the livers of rat
+foeti removed between the fifteenth and the twenty-first day of         
+gestation and of young rats newly-born or at weaning . we can observe   
+the following facts..                                                   
+  1. dna concentration is 1100 ug p on the 15th day, it decreases from  
+the 19th day until it reaches a value of 280 ug 5 days after weaning .  
+  2. rna concentration is 1400 ug p on the 15th day and decreases to 820
+during the same period .                                                
+  3. pl concentration is low on the 15th day and during foetal life (700
+ug) and increases abruptly at birth .                                   
+  4. the ratios rna cyto/dna and pl cyto/dna increase regularly from the
+18th day of foetal life .                                               
+  5. nuclear rna and pl contents are very high throughout the           
+development .                                                           
+  6. these results enable us to characterize three stages in the        
+development of the rat liver.. - from the 15th day to the 18th day of   
+foetal life.. stage of growth through hyperplasia without hypertrophy,  
+  - from the 19th day of foetal life to the 3rd day of post-natal life,.
+stage of cellular reorganisation,                                       
+  - after the 3rd day of post-natal life.. stage of growth through      
+hyperplasia and hypertrophy .                                           
+.I 3
+.W
+surfactant in fetal lamb tracheal fluid .                               
+  lambs delivered by cesarean section with intact fetal circulation have
+a fluid filling the trachea . analysis revealed that this fluid         
+contained material high in surface activity in lambs delivered near     
+term, but less surface activity in premature lambs .                    
+  administration of 10 per cent oxygen to the ewe for 1 hour prior to   
+delivery did not alter the surfactant properties of the fetal tracheal  
+fluid .                                                                 
+  two analyses of the fetal tracheal fluid revealed it to contain 146   
+and 198 mg. of lipid per 100 ml., 30 to 40 per cent of which was        
+phospholipid, part of the active component of surfactant .              
+  the investigations reported here offer a model for further research   
+into possible intrauterine factors in the pathogenesis of hyaline       
+membrane disease .                                                      
+.I 4
+.W
+placental and cord blood lipids.. comparison in a set of double ovum    
+twins, a stillborn and a live-born .                                    
+  1. determinations of phospholipid, total and free cholesterol,        
+triglyceride and nefa have been made on placental tissue and cord blood 
+in a set of double ovum twins, one stillborn and one live-born .        
+  2. similarities occurred in all fractions studied except the cord     
+blood triglyceride and nefa levels .                                    
+  3. the serum of the stillborn infant contained one-third as much      
+triglyceride and 21/2 times as much nefa as did the live-born infant .  
+  4. the phospholipid content and the total lipid content of the        
+stillbirth placenta were the highest studied in this laboratory which   
+includes determinations on 26 live births .                             
+  5. the suggestion is made that increased lipoprotein lipase activity  
+in the cord blood may accompany intrauterine fetal death .              
+.I 5
+.W
+free fatty acid concentration in maternal plasma and fetal body fat     
+content .                                                               
+  subcutaneous injection of 200 u.s.p. units of heparin into female     
+sprague-dawley rats produced large and sustained elevations of plasma   
+free fatty acids but no significant change in blood glucose . a group of
+pregnant rats received such injections of heparin 3 times daily         
+throughout pregnancy . the fetuses from mothers of this group, at 191/2 
+and 211/2 days of gestation, had significantly more body fat than the   
+fetuses from uninjected mothers . the hypothesis is presented that the  
+maternal free fatty acid concentration in part determines fetal fat     
+accumulation . it is proposed that the body composition changes noted in
+babies of mothers with diabetes might thus be ascribed to abnormally    
+high maternal plasma free fatty acid concentrations .                   

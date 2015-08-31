@@ -16,10 +16,10 @@ public class CreateInputFiles {
 		ReadingParameterFile parameterFile = new ReadingParameterFile(parameterFilePath);
 		parameterFile.readFile();
 		
-		ReadingQueriesFile queriesFile = new ReadingQueriesFile(parameterFile.getQueryFileName());
-		queriesFile.readFile();
+		ReadingDocsFile docsFile = new ReadingDocsFile(parameterFile.getDocsFileName());
+		docsFile.readFile();
 		
-		dict = queriesFile.getDictonaryNumberQueryToQuery();
+		dict = docsFile.getDictonaryNumberQueryToQuery();
 	}
 	
 	public void Create(String dataDirPath) throws IOException
@@ -28,7 +28,7 @@ public class CreateInputFiles {
 		boolean bool=dir.mkdirs();
 		int indexFile=1;
 		
-		while(indexFile < dict.length)
+		while(indexFile <= dict.length)
 		{ 
 			String fileName = indexFile+".txt";		
 			File actualFile = new File (dir, fileName);

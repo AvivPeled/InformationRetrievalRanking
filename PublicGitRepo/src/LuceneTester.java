@@ -1,7 +1,13 @@
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.LeafReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -12,14 +18,16 @@ import readingInputFiles.ReadingQueriesFile;
 
 public class LuceneTester {
 	
-   static String  dataDir= "C:\\Lucene\\Index";
-   String  indexDir= "C:\\Lucene\\Data";
+   static String parameterFilePath="parameterFile.txt";
+   static String  dataDir= "C:\\Lucene\\Data";
+   String  indexDir= "Index";
    Indexer indexer;
    
    public static void main(String[] args) throws ParseException {
       LuceneTester tester;
       try {
-    	  String parameterFilePath="parameterFile.txt";
+    	  
+    	  
     	  CreateInputFiles createInputFiles=new CreateInputFiles(parameterFilePath);
   		  createInputFiles.Create(dataDir);
           tester = new LuceneTester();
@@ -31,7 +39,8 @@ public class LuceneTester {
   		  queriesFile.readFile();
   		
   		  String [] dict= queriesFile.getDictonaryNumberQueryToQuery();
-          tester.search(dict[0]);
+  		  System.out.println(dict[3]);
+          tester.search(dict[3]);
          
          
       } catch (IOException e) {
@@ -48,6 +57,7 @@ public class LuceneTester {
       indexer.close();
       System.out.println(numIndexed+" File indexed, time taken: "
          +(endTime-startTime)+" ms");		
+      
    }
    
    private void search(String searchQuery) throws IOException, ParseException{
@@ -55,13 +65,27 @@ public class LuceneTester {
 	      long startTime = System.currentTimeMillis();
 	      TopDocs hits = searcher.search(searchQuery);
 	      long endTime = System.currentTimeMillis();
-	   
+	      ReadingParameterFile parametersFileReader = new ReadingParameterFile(parameterFilePath);
+	      parametersFileReader.readFile();
+	      System.out.println(System.getProperty("user.dir"));
 	      System.out.println(hits.totalHits +
 	         " documents found. Time :" + (endTime - startTime));
 	      for(ScoreDoc scoreDoc : hits.scoreDocs) {
 	         Document doc = searcher.getDocument(scoreDoc);
-	            System.out.println("File: "
-	            + doc.get(LuceneConstants.FILE_PATH));
+	         //Write result document in the output file
+	         File file = new File(parametersFileReader.getOutputFileName());
+
+				// if file doesnt exists, then create it
+				if (!file.exists()) {
+					file.createNewFile();
+				}
+
+				FileWriter fw = new FileWriter(file.getAbsoluteFile());
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write("File: "
+			            + doc.get(LuceneConstants.FILE_PATH));
+				bw.close();
+	         
 	      }
 	      searcher.close();
 	   }
