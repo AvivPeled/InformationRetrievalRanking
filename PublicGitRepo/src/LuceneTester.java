@@ -47,7 +47,7 @@ public class LuceneTester {
          e.printStackTrace();
       } 
    }
-
+    
    private void createIndex() throws IOException{
       indexer = new Indexer(indexDir);
       int numIndexed;
