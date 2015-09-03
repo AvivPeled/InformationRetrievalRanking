@@ -15,7 +15,9 @@ import java.nio.file.Paths;
 
 
 
+
 import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -48,6 +50,7 @@ public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IO
 	    searcher = new IndexSearcher(reader);
 	   this.stopWords=stopWords;
 	   stopWords.calculateFrequency(docs, idx);
+	  
    }
    
  
