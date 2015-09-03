@@ -20,13 +20,13 @@ import readingInputFiles.ReadingQueriesFile;
 
 public class LuceneTester {
 	
-   static String parameterFilePath="parameterFile.txt";
-   static String  dataDir= "Data";
-   String  indexDir= "Index";
-   Indexer indexer;
-   static RAMDirectory idx;
    public static void main(String[] args)  {
       LuceneTester tester;
+      String parameterFilePath=args[0];
+      String  dataDir= "Data";
+      String  indexDir= "Index";
+      Indexer indexer;
+      RAMDirectory idx;
       try {
     	  
     	  idx = new RAMDirectory();
@@ -34,7 +34,7 @@ public class LuceneTester {
   		  createInputFiles.Create(dataDir);
   		  String [] docs=createInputFiles.getDocs();
           tester = new LuceneTester();
-          tester.createIndex(docs);
+          indexer = tester.createIndex(docs, idx);
          
           ReadingParameterFile parameterFile = new ReadingParameterFile(parameterFilePath);
   		  parameterFile.readFile();
@@ -42,27 +42,35 @@ public class LuceneTester {
   		  queriesFile.readFile();
   		
   		  String [] dict= queriesFile.getDictonaryNumberQueryToQuery();
-  		  System.out.println(dict[3]);
+  		  System.out.println("The fourth query is:"+dict[3]);
          
-  		  tester.search(dict[3]);
-         StopWords stopWords=new StopWords();
-         stopWords.computeTopTermQuery(idx);
-         List<String> topTerms=stopWords.getTopTerms();
-         Map<String,Integer> frequencyMap= stopWords.getFrequencyMap();
+  		  tester.search(dict[3], idx);
+  		  
+  		  
+  		  
+  		  tester.evaluateResults(parameterFile.getOutputFileName());
+         //StopWords stopWords=new StopWords();
+     //    stopWords.computeTopTermQuery(idx);
+      //   List<String> topTerms=stopWords.getTopTerms();
+       //  Map<String,Integer> frequencyMap= stopWords.getFrequencyMap();
       } catch (Exception e) {
          e.printStackTrace();
       } 
    }
     
-   private void createIndex(String [] docs) throws IOException{
-      indexer = new Indexer(idx);
+   private void evaluateResults(String outputFilePath){
+	   
+   }
+   private Indexer createIndex(String [] docs, RAMDirectory idx) throws IOException{
+      Indexer indexer = new Indexer(idx);
       indexer.createIndex(docs);
-      indexer.close();      
+      indexer.close();
+      return indexer;
    }
    
-   private void search(String searchQuery) throws IOException, ParseException{
+   private void search(String searchQuery, RAMDirectory idx) throws IOException, ParseException{
 	      Searcher searcher = new Searcher(idx);
-	     searcher.search(searchQuery);
+	      searcher.search(searchQuery);
 	      searcher.close();
 	   }
 }

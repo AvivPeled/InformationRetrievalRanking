@@ -69,6 +69,7 @@ public Searcher( RAMDirectory idx) throws IOException {
             int docId = scoreDoc.doc;
             float docScore = scoreDoc.score;
             System.out.println("docId: " + docId + "\t" + "docScore: " + docScore);
+            
  
             Document doc = searcher.doc(docId);
  
@@ -76,8 +77,8 @@ public Searcher( RAMDirectory idx) throws IOException {
             // that this Field was not indexed, but (unlike the
             // "contents" field) was stored verbatim and can be
             // retrieved.
-            System.out.println("  " + (i + 1) + ". " + doc.get("title"));
-            System.out.println("Content: " + doc.get("content"));            
+            //System.out.println("  " + (i + 1) + ". " + doc.get("title"));
+            //System.out.println("Content: " + doc.get("content"));            
          }
       }
       System.out.println();
