@@ -46,7 +46,7 @@ public class LuceneTester {
 			ReadingQueriesFile queriesFile = new ReadingQueriesFile(
 					parameterFile.getQueryFileName());
 			queriesFile.readFile();
-
+   
 			String[] dict = queriesFile.getDictonaryNumberQueryToQuery();
 			System.out.println(dict[3]);
 			

@@ -21,7 +21,7 @@ class SortingComparator
                 return (o2.getValue()).compareTo( o1.getValue());
             }
         } );
-
+  
         Map<K, V> result = new LinkedHashMap<K, V>();
         for (Map.Entry<K, V> entry : list)
         {

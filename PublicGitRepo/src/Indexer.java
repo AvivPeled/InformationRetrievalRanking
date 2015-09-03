@@ -78,7 +78,7 @@ public class Indexer {
 			writer.addDocument(createDocument(Integer.toString(i), docs[i]));
 		
 		}
-
+  
 	}
 
 	public void createIndex(String[] docs) throws Exception {

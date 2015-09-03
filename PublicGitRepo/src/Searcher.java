@@ -52,7 +52,7 @@ public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IO
 	   stopWords.calculateFrequency(docs, idx);
 	  
    }
-   
+      
  
    /**
     * Searches for the given string in the "content" field
