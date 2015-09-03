@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
@@ -25,17 +26,55 @@ public class Indexer {
 
 	private IndexWriter writer;
 
-	public Indexer(String indexDirectoryPath) throws IOException{
-		
-		Analyzer analyzer = new StandardAnalyzer();
-	   //this directory will contain the indexes
-	   Directory indexDirectory = FSDirectory.open(Paths.get(indexDirectoryPath));
-	   IndexWriterConfig conf= new IndexWriterConfig(analyzer);
-	   //create the indexer
-	   writer = new IndexWriter(indexDirectory,conf);
-	   
+	public Indexer(RAMDirectory idx) throws IOException{
+		 
+		// Construct a RAMDirectory to hold the in-memory representation
+	      // of the index.
+	      
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36); 
+		IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_36, analyzer);
+		writer = new IndexWriter(idx, config); 
+	       
 	}
 
+	      /**
+	       * Make a Document object with an un-indexed title field and an
+	       * indexed content field.
+	       */
+	      private static Document createDocument(String title, String content) {
+	         Document doc = new Document();
+	    
+	         // Add the title as an unindexed field...
+	    
+	         doc.add(new Field("title", title, Field.Store.YES, Field.Index.NO));
+	    
+	    
+	         // ...and the content as an indexed field. Note that indexed
+	         // Text fields are constructed using a Reader. Lucene can read
+	         // and index very large chunks of text, without storing the
+	         // entire content verbatim in the index. In this example we
+	         // can just wrap the content string in a StringReader.
+	         doc.add(new Field("content", content, Field.Store.YES, Field.Index.ANALYZED));
+	    
+	         return doc;
+	      }
+	      
+	      
+	private static void addDoc(IndexWriter w, String text, String id) throws IOException {
+		  	Document doc = new Document();
+		  	Document document = new Document();
+
+			//index file contents
+			Field contentField = new Field(LuceneConstants.CONTENTS,text,Field.Store.YES,Index.ANALYZED);
+			//index file name
+			Field fileNameField = new Field(LuceneConstants.FILE_NAME,id,Field.Store.YES,Field.Index.NOT_ANALYZED);
+			//index file path
+			
+			document.add(contentField);
+			document.add(fileNameField);
+	
+			w.addDocument(doc);
+		}
 	
 	@SuppressWarnings("deprecation")
 	private Document getDocument(File file) throws IOException
@@ -62,22 +101,20 @@ public class Indexer {
 	      writer.addDocument(document);
 	   }
 
-	public int createIndex(String dataDirPath, FileFilter filter) 
-      throws IOException{
-      //get all files in the data directory
-	      File[] files = new File(dataDirPath).listFiles();
+   
+   private void addDocs(String [] docs) throws CorruptIndexException, IOException
+   {
+	   for(int i=0;i<docs.length;i++)
+	   {
+		   writer.addDocument(createDocument(Integer.toString(i),docs[i]));
+		   
+	   }
 
-	      for (File file : files) {
-	         if(!file.isDirectory()
-	            && !file.isHidden()
-	            && file.exists()
-	            && file.canRead()
-	            && filter.accept(file)
-	         ){
-	            indexFile(file);
-	         }
-	      }
-	      return writer.numDocs();
+   }
+	public void createIndex(String [] docs) 
+      throws IOException{
+		addDocs(docs);
+     
 	   }
      
 	

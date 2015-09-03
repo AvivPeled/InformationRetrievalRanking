@@ -4,13 +4,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.LeafReader;
-import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.RAMDirectory;
 
 import readingInputFiles.CreateInputFiles;
 import readingInputFiles.ReadingParameterFile;
@@ -19,19 +21,20 @@ import readingInputFiles.ReadingQueriesFile;
 public class LuceneTester {
 	
    static String parameterFilePath="parameterFile.txt";
-   static String  dataDir= "C:\\Lucene\\Data";
+   static String  dataDir= "Data";
    String  indexDir= "Index";
    Indexer indexer;
-   
-   public static void main(String[] args) throws ParseException {
+   static RAMDirectory idx;
+   public static void main(String[] args)  {
       LuceneTester tester;
       try {
     	  
-    	  
+    	  idx = new RAMDirectory();
     	  CreateInputFiles createInputFiles=new CreateInputFiles(parameterFilePath);
   		  createInputFiles.Create(dataDir);
+  		  String [] docs=createInputFiles.getDocs();
           tester = new LuceneTester();
-          tester.createIndex();
+          tester.createIndex(docs);
          
           ReadingParameterFile parameterFile = new ReadingParameterFile(parameterFilePath);
   		  parameterFile.readFile();
@@ -40,53 +43,26 @@ public class LuceneTester {
   		
   		  String [] dict= queriesFile.getDictonaryNumberQueryToQuery();
   		  System.out.println(dict[3]);
-          tester.search(dict[3]);
          
-         
-      } catch (IOException e) {
+  		  tester.search(dict[3]);
+         StopWords stopWords=new StopWords();
+         stopWords.computeTopTermQuery(idx);
+         List<String> topTerms=stopWords.getTopTerms();
+         Map<String,Integer> frequencyMap= stopWords.getFrequencyMap();
+      } catch (Exception e) {
          e.printStackTrace();
       } 
    }
     
-   private void createIndex() throws IOException{
-      indexer = new Indexer(indexDir);
-      int numIndexed;
-      long startTime = System.currentTimeMillis();	
-      numIndexed = indexer.createIndex(dataDir, new TextFileFilter());
-      long endTime = System.currentTimeMillis();
-      indexer.close();
-      System.out.println(numIndexed+" File indexed, time taken: "
-         +(endTime-startTime)+" ms");		
-      
+   private void createIndex(String [] docs) throws IOException{
+      indexer = new Indexer(idx);
+      indexer.createIndex(docs);
+      indexer.close();      
    }
    
    private void search(String searchQuery) throws IOException, ParseException{
-	      Searcher searcher = new Searcher(indexDir);
-	      long startTime = System.currentTimeMillis();
-	      TopDocs hits = searcher.search(searchQuery);
-	      long endTime = System.currentTimeMillis();
-	      ReadingParameterFile parametersFileReader = new ReadingParameterFile(parameterFilePath);
-	      parametersFileReader.readFile();
-	      System.out.println(System.getProperty("user.dir"));
-	      System.out.println(hits.totalHits +
-	         " documents found. Time :" + (endTime - startTime));
-	      for(ScoreDoc scoreDoc : hits.scoreDocs) {
-	         Document doc = searcher.getDocument(scoreDoc);
-	         //Write result document in the output file
-	         File file = new File(parametersFileReader.getOutputFileName());
-
-				// if file doesnt exists, then create it
-				if (!file.exists()) {
-					file.createNewFile();
-				}
-
-				FileWriter fw = new FileWriter(file.getAbsoluteFile());
-				BufferedWriter bw = new BufferedWriter(fw);
-				bw.write("File: "
-			            + doc.get(LuceneConstants.FILE_PATH));
-				bw.close();
-	         
-	      }
+	      Searcher searcher = new Searcher(idx);
+	     searcher.search(searchQuery);
 	      searcher.close();
 	   }
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class CreateInputFiles {
 
-	String [] dict;
+	 String [] dict;
 	
 	
 	public CreateInputFiles(String parameterFilePath) throws IOException
@@ -22,6 +22,10 @@ public class CreateInputFiles {
 		dict = docsFile.getDictonaryNumberQueryToQuery();
 	}
 	
+	public String [] getDocs()
+	{
+		return dict;
+	}
 	public void Create(String dataDirPath) throws IOException
 	{
 		File dir = new File (dataDirPath);
