@@ -1,4 +1,3 @@
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,58 +18,59 @@ import readingInputFiles.ReadingParameterFile;
 import readingInputFiles.ReadingQueriesFile;
 
 public class LuceneTester {
-	
-   public static void main(String[] args)  {
-      LuceneTester tester;
-      String parameterFilePath=args[0];
-      String  dataDir= "Data";
-      String  indexDir= "Index";
-      Indexer indexer;
-      RAMDirectory idx;
-      try {
-    	  
-    	  idx = new RAMDirectory();
-    	  CreateInputFiles createInputFiles=new CreateInputFiles(parameterFilePath);
-  		  createInputFiles.Create(dataDir);
-  		  String [] docs=createInputFiles.getDocs();
-          tester = new LuceneTester();
-          indexer = tester.createIndex(docs, idx);
-         
-          ReadingParameterFile parameterFile = new ReadingParameterFile(parameterFilePath);
-  		  parameterFile.readFile();
-          ReadingQueriesFile queriesFile = new ReadingQueriesFile(parameterFile.getQueryFileName());
-  		  queriesFile.readFile();
-  		
-  		  String [] dict= queriesFile.getDictonaryNumberQueryToQuery();
-  		  System.out.println("The fourth query is:"+dict[3]);
-         
-  		  tester.search(dict[3], idx);
-  		  
-  		  
-  		  
-  		  tester.evaluateResults(parameterFile.getOutputFileName());
-         //StopWords stopWords=new StopWords();
-     //    stopWords.computeTopTermQuery(idx);
-      //   List<String> topTerms=stopWords.getTopTerms();
-       //  Map<String,Integer> frequencyMap= stopWords.getFrequencyMap();
-      } catch (Exception e) {
-         e.printStackTrace();
-      } 
-   }
-    
-   private void evaluateResults(String outputFilePath){
-	   
-   }
-   private Indexer createIndex(String [] docs, RAMDirectory idx) throws IOException{
-      Indexer indexer = new Indexer(idx);
-      indexer.createIndex(docs);
-      indexer.close();
-      return indexer;
-   }
-   
-   private void search(String searchQuery, RAMDirectory idx) throws IOException, ParseException{
-	      Searcher searcher = new Searcher(idx);
-	      searcher.search(searchQuery);
-	      searcher.close();
-	   }
+	static String parameterFilePath;
+	static String dataDir = "Data";
+	String indexDir = "Index";
+	Indexer indexer;
+	static RAMDirectory idx;
+
+	public static void main(String[] args) {
+		LuceneTester tester;
+		try {
+			// HighFreqTerms f;
+			parameterFilePath = args[0];
+			StopWords stopWords=new StopWords();
+			idx = new RAMDirectory();
+			CreateInputFiles createInputFiles = new CreateInputFiles(
+					parameterFilePath);
+			
+			createInputFiles.Create(dataDir);
+			String[] docs = createInputFiles.getDocs();
+			tester = new LuceneTester();
+			
+			tester.createIndex(docs,stopWords);
+			stopWords.calculateFrequency(docs, idx);
+			ReadingParameterFile parameterFile = new ReadingParameterFile(
+					parameterFilePath);
+			parameterFile.readFile();
+			ReadingQueriesFile queriesFile = new ReadingQueriesFile(
+					parameterFile.getQueryFileName());
+			queriesFile.readFile();
+
+			String[] dict = queriesFile.getDictonaryNumberQueryToQuery();
+			System.out.println(dict[3]);
+			
+			tester.search(dict[3],docs,stopWords);
+			
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void createIndex(String[] docs, StopWords stopWords) throws Exception {
+		indexer = new Indexer(idx,docs,stopWords);
+		indexer.createIndex(docs);
+		indexer.close();
+		
+	}
+
+	private void search(String searchQuery, String [] docs, StopWords stopWords) throws Exception {
+		Searcher searcher = new Searcher(idx, docs,stopWords);
+		searcher.search(searchQuery);
+		searcher.close();
+
+	}
+
 }

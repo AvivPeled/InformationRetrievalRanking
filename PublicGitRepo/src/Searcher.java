@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -10,6 +9,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.DocIdSetIterator;
 import org.apache.lucene.search.Explanation;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -19,24 +19,32 @@ import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.Version;
 
 public class Searcher {
 	
 
    IndexSearcher searcher;
-
+   StopWords stopWords;
+   
    @SuppressWarnings("deprecation")
-public Searcher( RAMDirectory idx) throws IOException {
-
-	    searcher = new IndexSearcher(idx);
+public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IOException {	
+	   IndexReader reader = IndexReader.open(idx);
+	    searcher = new IndexSearcher(reader);
+	   this.stopWords=stopWords;
+	   stopWords.calculateFrequency(docs, idx);
    }
    
+ 
    /**
     * Searches for the given string in the "content" field
+ * @throws Exception 
     */
    public void search(String queryString)
-           throws ParseException, IOException {
+         throws Exception {
+	  
+	queryString=stopWords.removeStopWords(queryString);
 	   SimpleAnalyzer  analyzer = new SimpleAnalyzer(Version.LUCENE_36);
       // Build a Query object
 	   QueryParser queryParser = new QueryParser(Version.LUCENE_36,"content", analyzer);
@@ -46,7 +54,7 @@ public Searcher( RAMDirectory idx) throws IOException {
  
       int hitsPerPage = 10;
       // Search for the query
-      TopScoreDocCollector collector = TopScoreDocCollector.create(5 * hitsPerPage, false);
+      TopScoreDocCollector collector = TopScoreDocCollector.create(5 * hitsPerPage, true);
       searcher.search(query, collector);
  
       ScoreDoc[] hits = collector.topDocs().scoreDocs;
@@ -89,8 +97,9 @@ public Searcher( RAMDirectory idx) throws IOException {
       return indexSearcher.doc(scoreDoc.doc);	
    }
 */
+ 
    public void close() throws IOException{
-	    searcher.close();
+	    
 	 //   indexDirectory.close(); 
    }
 }
