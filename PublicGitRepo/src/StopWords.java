@@ -63,7 +63,7 @@ public class StopWords {
 		    for(int docNum=0; docNum < ir.numDocs(); docNum++) {
 		        TermFreqVector termFreqVector = ir.getTermFreqVector(docNum, LuceneConstants.CONTENTS);
 		       
-		            
+		                
 		        String terms[] = termFreqVector.getTerms();
 		        int freqs[] = termFreqVector.getTermFrequencies();
 		        int totalEntries = terms.length;
