@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -29,13 +30,15 @@ public class Searcher {
 
    IndexSearcher searcher;
    StopWords stopWords;
+   FileWriter outputFileWriter;
    
    @SuppressWarnings("deprecation")
-public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IOException {	
+public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords, FileWriter outputFileWriter) throws IOException {	
 	   IndexReader reader = IndexReader.open(idx);
 	    searcher = new IndexSearcher(reader);
 	   this.stopWords=stopWords;
 	   stopWords.calculateFrequency(docs, idx);
+	   this.outputFileWriter=outputFileWriter;
 	  
    }
       
@@ -44,9 +47,13 @@ public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IO
     * Searches for the given string in the "content" field
  * @throws Exception 
     */
-   public void search(String queryString)
+   public void search(int queryNumber, String queryString)
          throws Exception {
-	  
+	   
+	   String newLine = System.getProperty("line.separator");
+
+
+	
 	queryString=stopWords.removeStopWords(queryString);
 	   SimpleAnalyzer  analyzer = new SimpleAnalyzer(Version.LUCENE_36);
       // Build a Query object
@@ -70,6 +77,10 @@ public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IO
       if (hitCount == 0) {
          System.out.println(
                  "No matches were found for \"" + queryString + "\"");
+         
+         outputFileWriter.write("q"+queryNumber+",dummy,1"+ newLine);
+  	   
+  	   
       } else {
          System.out.println("Hits for \"" +
                  queryString + "\" were found in quotes by:");
@@ -80,19 +91,14 @@ public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IO
             int docId = scoreDoc.doc;
             float docScore = scoreDoc.score;
             System.out.println("docId: " + docId + "\t" + "docScore: " + docScore);
-            
+            outputFileWriter.write("q"+queryNumber+",doc"+docId+","+(i+1)+ newLine);
  
             Document doc = searcher.doc(docId);
- 
-            // Print the value that we stored in the "title" field. Note
-            // that this Field was not indexed, but (unlike the
-            // "contents" field) was stored verbatim and can be
-            // retrieved.
-            //System.out.println("  " + (i + 1) + ". " + doc.get("title"));
-            //System.out.println("Content: " + doc.get("content"));            
+           
          }
       }
       System.out.println();
+      
    }
 
   /* public Document getDocument(ScoreDoc scoreDoc) 

@@ -43,17 +43,19 @@ public class LuceneTester {
 			ReadingParameterFile parameterFile = new ReadingParameterFile(
 					parameterFilePath);
 			parameterFile.readFile();
+			FileWriter outputFileWriter = new FileWriter(parameterFile.getOutputFileName());
 			ReadingQueriesFile queriesFile = new ReadingQueriesFile(
 					parameterFile.getQueryFileName());
 			queriesFile.readFile();
    
 			String[] dict = queriesFile.getDictonaryNumberQueryToQuery();
-			System.out.println(dict[3]);
+			for(int i=0; i<dict.length; i++)
+			{
+				System.out.println(dict[i]);
+				tester.search(i+1, dict[i],docs,stopWords, outputFileWriter);
+			}
 			
-			tester.search(dict[3],docs,stopWords);
-			
-			
-
+		outputFileWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,9 +68,9 @@ public class LuceneTester {
 		
 	}
 
-	private void search(String searchQuery, String [] docs, StopWords stopWords) throws Exception {
-		Searcher searcher = new Searcher(idx, docs,stopWords);
-		searcher.search(searchQuery);
+	private void search(int queryNumber, String searchQuery, String [] docs, StopWords stopWords, FileWriter outputFileWriter) throws Exception {
+		Searcher searcher = new Searcher(idx, docs,stopWords, outputFileWriter);
+		searcher.search(queryNumber, searchQuery);
 		searcher.close();
 
 	}
