@@ -39,11 +39,9 @@ public class Indexer {
 	private IndexWriter writer;
 
 	public Indexer(RAMDirectory idx, String[] docs) throws IOException {
-
 		writer = new IndexWriter(idx, new StandardAnalyzer(Version.LUCENE_36,
 				Collections.emptySet()), true,
 				IndexWriter.MaxFieldLength.UNLIMITED);
-
 	}
 
 	/**

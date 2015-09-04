@@ -38,15 +38,15 @@ public class LuceneTester {
 			parameterFile.readFile();
 
 			FileWriter outputFileWriter = new FileWriter(parameterFile.getOutputFileName());
-			ReadingQueriesFile queriesFile = new ReadingQueriesFile(					parameterFile.getQueryFileName());
+			ReadingQueriesFile queriesFile = new ReadingQueriesFile(parameterFile.getQueryFileName());
 
 			queriesFile.readFile();
 
 
-			if(parameterFile.getRetrievalAlgorithmType()=="improved")
+		//	if(parameterFile.getRetrievalAlgorithmType()=="improved")
 			{
 				improvedAlgo=true;
-				
+				StopWords.Instance.setNumber_stop_words(25);
 				for(int i=0; i<docs.length;i++)
 				{
 					docs[i]=Stemmer.Stem(docs[i], "English");

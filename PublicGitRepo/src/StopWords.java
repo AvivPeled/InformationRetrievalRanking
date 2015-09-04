@@ -32,7 +32,11 @@ public class StopWords {
 		stopWords = new ArrayList<String>();
 		NUMBER_STOP_WORDS = 20;
 	}
-
+	
+	public void setNumber_stop_words(int number)
+	{
+		 NUMBER_STOP_WORDS=number;
+	}
 	public Map<String, Integer> getFrequencyMap() {
 		return frequencyCountMap;
 	}

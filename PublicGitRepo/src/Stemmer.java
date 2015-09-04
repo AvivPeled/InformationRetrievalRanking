@@ -29,7 +29,5 @@ public class Stemmer{
         return result.toString().trim();
     }
 
-    public static void main (String[] args){
-        Stemmer.Stem("Michele Bachmann amenities pressed her allegations that the former head of her Iowa presidential bid was bribed by the campaign of rival Ron Paul to endorse him, even as one of her own aides denied the charge.", "English");
-    }
+    
 }
