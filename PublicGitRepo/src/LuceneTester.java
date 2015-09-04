@@ -19,7 +19,7 @@ import readingInputFiles.ReadingQueriesFile;
 
 public class LuceneTester {
 
-	static String parameterFilePath = "parameterFile.txt";
+	static String parameterFilePath;
 	Indexer indexer;
 	static RAMDirectory idx;
 
@@ -27,6 +27,7 @@ public class LuceneTester {
 		LuceneTester tester;
 		try {
 			// HighFreqTerms f;
+			parameterFilePath = args[0];
 			boolean improvedAlgo=false;
 			idx = new RAMDirectory();
 			CreateInputFiles createInputFiles = new CreateInputFiles(parameterFilePath);
