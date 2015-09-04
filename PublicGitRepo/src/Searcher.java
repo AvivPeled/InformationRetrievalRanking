@@ -1,24 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-<<<<<<< HEAD
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> branch 'master' of https://github.com/AvivPeled/InformationRetrievalRanking.git
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
