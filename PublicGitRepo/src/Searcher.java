@@ -58,7 +58,7 @@ public class Searcher {
 		String newLine = System.getProperty("line.separator");
 		queryString=removeStopWordsAndImprove(queryString);
 		
-		SimpleAnalyzer analyzer = new SimpleAnalyzer(Version.LUCENE_36);
+		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		// Build a Query object
 		QueryParser queryParser = new QueryParser(Version.LUCENE_36, "content",
 				analyzer);
