@@ -40,12 +40,12 @@ public class Indexer {
 
 	private IndexWriter writer;
 	StopWords stopWords;
-	public Indexer(RAMDirectory idx,String [] docs, StopWords stopWords) throws IOException {
+	public Indexer(RAMDirectory idx,String [] docs) throws IOException {
 
 		writer = new IndexWriter(idx, new StandardAnalyzer(Version.LUCENE_36,
 				Collections.emptySet()), true,
 				IndexWriter.MaxFieldLength.UNLIMITED);
-		this.stopWords=stopWords;
+	
 		
 	
 	}

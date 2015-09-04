@@ -22,14 +22,15 @@ import org.apache.lucene.util.Version;
 
 public class StopWords {
 
-
+	public static StopWords Instance=new StopWords();
 	Map<String, Integer> frequencyCountMap;
 	ArrayList<String> stopWords;
-
-	public StopWords() {
+	private int NUMBER_STOP_WORDS;
+	private StopWords() {
 		frequencyCountMap = new HashMap<String, Integer>();
 		// retrieve the top terms based on topTermCutoff
 		stopWords = new ArrayList<String>();
+		NUMBER_STOP_WORDS=20;
 	}
 
 	public Map<String, Integer> getFrequencyMap() {
@@ -85,7 +86,7 @@ public class StopWords {
 		            frequencyCountMap.put(entry.getKey(),count);
 		        }
 		    }
-		    stopWords = buildStopwordsList(20);
+		    stopWords = buildStopwordsList(NUMBER_STOP_WORDS);
 		    printStopWords(stopWords);
 		    
 		   

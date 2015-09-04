@@ -25,84 +25,81 @@ import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.Version;
 
 public class Searcher {
-	
 
-   IndexSearcher searcher;
-   StopWords stopWords;
-   
-   @SuppressWarnings("deprecation")
-public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IOException {	
-	   IndexReader reader = IndexReader.open(idx);
-	    searcher = new IndexSearcher(reader);
-	   this.stopWords=stopWords;
-	   stopWords.calculateFrequency(docs, idx);
-	  
-   }
-      
- 
-   /**
-    * Searches for the given string in the "content" field
- * @throws Exception 
-    */
-   public void search(String queryString)
-         throws Exception {
-	  
-	queryString=stopWords.removeStopWords(queryString);
-	   SimpleAnalyzer  analyzer = new SimpleAnalyzer(Version.LUCENE_36);
-      // Build a Query object
-	   QueryParser queryParser = new QueryParser(Version.LUCENE_36,"content", analyzer);
-            
-      Query query = queryParser.parse(queryString);
- 
- 
-      int hitsPerPage = 10;
-      // Search for the query
-      TopScoreDocCollector collector = TopScoreDocCollector.create(5 * hitsPerPage, true);
-      searcher.search(query, collector);
- 
-      ScoreDoc[] hits = collector.topDocs().scoreDocs;
- 
-      int hitCount = collector.getTotalHits();
-      System.out.println(hitCount + " total matching documents");
- 
-      // Examine the Hits object to see if there were any matches
- 
-      if (hitCount == 0) {
-         System.out.println(
-                 "No matches were found for \"" + queryString + "\"");
-      } else {
-         System.out.println("Hits for \"" +
-                 queryString + "\" were found in quotes by:");
- 
-         // Iterate over the Documents in the Hits object
-         for (int i = 0; i < hits.length; i++) {
-            ScoreDoc scoreDoc = hits[i];
-            int docId = scoreDoc.doc;
-            float docScore = scoreDoc.score;
-            System.out.println("docId: " + docId + "\t" + "docScore: " + docScore);
-            
- 
-            Document doc = searcher.doc(docId);
- 
-            // Print the value that we stored in the "title" field. Note
-            // that this Field was not indexed, but (unlike the
-            // "contents" field) was stored verbatim and can be
-            // retrieved.
-            //System.out.println("  " + (i + 1) + ". " + doc.get("title"));
-            //System.out.println("Content: " + doc.get("content"));            
-         }
-      }
-      System.out.println();
-   }
+	IndexSearcher searcher;
 
-  /* public Document getDocument(ScoreDoc scoreDoc) 
-      throws CorruptIndexException, IOException{
-      return indexSearcher.doc(scoreDoc.doc);	
-   }
-*/
- 
-   public void close() throws IOException{
-	    
-	 //   indexDirectory.close(); 
-   }
+	@SuppressWarnings("deprecation")
+	public Searcher(RAMDirectory idx, String[] docs) throws IOException {
+		IndexReader reader = IndexReader.open(idx);
+		searcher = new IndexSearcher(reader);
+
+		StopWords.Instance.calculateFrequency(docs, idx);
+	}
+
+	/**
+	 * Searches for the given string in the "content" field
+	 * 
+	 * @throws Exception
+	 */
+	public void search(String queryString) throws Exception {
+
+		queryString = StopWords.Instance.removeStopWords(queryString);
+		SimpleAnalyzer analyzer = new SimpleAnalyzer(Version.LUCENE_36);
+		// Build a Query object
+		QueryParser queryParser = new QueryParser(Version.LUCENE_36, "content",
+				analyzer);
+
+		Query query = queryParser.parse(queryString);
+
+		int hitsPerPage = 10;
+		// Search for the query
+		TopScoreDocCollector collector = TopScoreDocCollector.create(
+				5 * hitsPerPage, true);
+		searcher.search(query, collector);
+
+		ScoreDoc[] hits = collector.topDocs().scoreDocs;
+
+		int hitCount = collector.getTotalHits();
+		System.out.println(hitCount + " total matching documents");
+
+		// Examine the Hits object to see if there were any matches
+
+		if (hitCount == 0) {
+			System.out.println("No matches were found for \"" + queryString
+					+ "\"");
+		} else {
+			System.out.println("Hits for \"" + queryString
+					+ "\" were found in quotes by:");
+
+			// Iterate over the Documents in the Hits object
+			for (int i = 0; i < hits.length; i++) {
+				ScoreDoc scoreDoc = hits[i];
+				int docId = scoreDoc.doc;
+				float docScore = scoreDoc.score;
+				System.out.println("docId: " + docId + "\t" + "docScore: "
+						+ docScore);
+
+				Document doc = searcher.doc(docId);
+
+				// Print the value that we stored in the "title" field. Note
+				// that this Field was not indexed, but (unlike the
+				// "contents" field) was stored verbatim and can be
+				// retrieved.
+				// System.out.println("  " + (i + 1) + ". " + doc.get("title"));
+				// System.out.println("Content: " + doc.get("content"));
+			}
+		}
+		System.out.println();
+	}
+
+	/*
+	 * public Document getDocument(ScoreDoc scoreDoc) throws
+	 * CorruptIndexException, IOException{ return
+	 * indexSearcher.doc(scoreDoc.doc); }
+	 */
+
+	public void close() throws IOException {
+
+		// indexDirectory.close();
+	}
 }

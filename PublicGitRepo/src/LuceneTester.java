@@ -29,7 +29,7 @@ public class LuceneTester {
 		LuceneTester tester;
 		try {
 			// HighFreqTerms f;
-			StopWords stopWords=new StopWords();
+			
 			idx = new RAMDirectory();
 			CreateInputFiles createInputFiles = new CreateInputFiles(
 					parameterFilePath);
@@ -38,8 +38,8 @@ public class LuceneTester {
 			String[] docs = createInputFiles.getDocs();
 			tester = new LuceneTester();
 			
-			tester.createIndex(docs,stopWords);
-			stopWords.calculateFrequency(docs, idx);
+			tester.createIndex(docs);
+			//stopWords.calculateFrequency(docs, idx);
 			ReadingParameterFile parameterFile = new ReadingParameterFile(
 					parameterFilePath);
 			parameterFile.readFile();
@@ -50,7 +50,7 @@ public class LuceneTester {
 			String[] dict = queriesFile.getDictonaryNumberQueryToQuery();
 			System.out.println(dict[3]);
 			
-			tester.search(dict[3],docs,stopWords);
+			tester.search(dict[3],docs);
 			
 			
 
@@ -59,15 +59,15 @@ public class LuceneTester {
 		}
 	}
 
-	private void createIndex(String[] docs, StopWords stopWords) throws Exception {
-		indexer = new Indexer(idx,docs,stopWords);
+	private void createIndex(String[] docs) throws Exception {
+		indexer = new Indexer(idx,docs);
 		indexer.createIndex(docs);
 		indexer.close();
 		
 	}
 
-	private void search(String searchQuery, String [] docs, StopWords stopWords) throws Exception {
-		Searcher searcher = new Searcher(idx, docs,stopWords);
+	private void search(String searchQuery, String [] docs) throws Exception {
+		Searcher searcher = new Searcher(idx, docs);
 		searcher.search(searchQuery);
 		searcher.close();
 
