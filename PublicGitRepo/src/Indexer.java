@@ -34,20 +34,16 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.store.LockObtainFailedException;
 
-
-
 public class Indexer {
 
 	private IndexWriter writer;
-	StopWords stopWords;
-	public Indexer(RAMDirectory idx,String [] docs, StopWords stopWords) throws IOException {
+
+	public Indexer(RAMDirectory idx, String[] docs) throws IOException {
 
 		writer = new IndexWriter(idx, new StandardAnalyzer(Version.LUCENE_36,
 				Collections.emptySet()), true,
 				IndexWriter.MaxFieldLength.UNLIMITED);
-		this.stopWords=stopWords;
-		
-	
+
 	}
 
 	/**
@@ -59,14 +55,14 @@ public class Indexer {
 
 		// Add the title as an unindexed field...
 
-		doc.add(new Field("title", title, Field.Store.YES, Field.Index.NO));
+		doc.add(new Field(LuceneConstants.TITLE, title, Field.Store.YES, Field.Index.NO));
 
 		// ...and the content as an indexed field. Note that indexed
 		// Text fields are constructed using a Reader. Lucene can read
 		// and index very large chunks of text, without storing the
 		// entire content verbatim in the index. In this example we
 		// can just wrap the content string in a StringReader.
-		doc.add(new Field("content", content, Field.Store.YES,
+		doc.add(new Field(LuceneConstants.CONTENTS, content, Field.Store.YES,
 				Field.Index.ANALYZED, Field.TermVector.YES));
 
 		return doc;
@@ -74,11 +70,11 @@ public class Indexer {
 
 	private void addDocs(String[] docs) throws Exception {
 		for (int i = 0; i < docs.length; i++) {
-			
+
 			writer.addDocument(createDocument(Integer.toString(i), docs[i]));
-		
+
 		}
-  
+
 	}
 
 	public void createIndex(String[] docs) throws Exception {

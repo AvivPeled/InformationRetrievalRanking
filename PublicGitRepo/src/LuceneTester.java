@@ -20,8 +20,6 @@ import readingInputFiles.ReadingQueriesFile;
 public class LuceneTester {
 
 	static String parameterFilePath = "parameterFile.txt";
-	static String dataDir = "Data";
-	String indexDir = "Index";
 	Indexer indexer;
 	static RAMDirectory idx;
 
@@ -29,48 +27,54 @@ public class LuceneTester {
 		LuceneTester tester;
 		try {
 			// HighFreqTerms f;
-			StopWords stopWords=new StopWords();
+			boolean improvedAlgo=false;
 			idx = new RAMDirectory();
-			CreateInputFiles createInputFiles = new CreateInputFiles(
-					parameterFilePath);
-			
-			createInputFiles.Create(dataDir);
+			CreateInputFiles createInputFiles = new CreateInputFiles(parameterFilePath);
+	
 			String[] docs = createInputFiles.getDocs();
 			tester = new LuceneTester();
 			
-			tester.createIndex(docs,stopWords);
-			stopWords.calculateFrequency(docs, idx);
-			ReadingParameterFile parameterFile = new ReadingParameterFile(
-					parameterFilePath);
+			tester.createIndex(docs);
+			//stopWords.calculateFrequency(docs, idx);
+			ReadingParameterFile parameterFile = new ReadingParameterFile(parameterFilePath);
 			parameterFile.readFile();
+
 			FileWriter outputFileWriter = new FileWriter(parameterFile.getOutputFileName());
-			ReadingQueriesFile queriesFile = new ReadingQueriesFile(
-					parameterFile.getQueryFileName());
+			ReadingQueriesFile queriesFile = new ReadingQueriesFile(					parameterFile.getQueryFileName());
+
 			queriesFile.readFile();
    
 			String[] dict = queriesFile.getDictonaryNumberQueryToQuery();
+			if(parameterFile.getRetrievalAlgorithmType()=="improved")
+			{
+				improvedAlgo=true;
+			}
 			for(int i=0; i<dict.length; i++)
 			{
 				System.out.println(dict[i]);
-				tester.search(i+1, dict[i],docs,stopWords, outputFileWriter);
+				
+				tester.search(i+1, dict[i],docs, outputFileWriter, improvedAlgo);
 			}
 			
 		outputFileWriter.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void createIndex(String[] docs, StopWords stopWords) throws Exception {
-		indexer = new Indexer(idx,docs,stopWords);
+	private void createIndex(String[] docs) throws Exception {
+		indexer = new Indexer(idx,docs);
 		indexer.createIndex(docs);
 		indexer.close();
 		
 	}
 
-	private void search(int queryNumber, String searchQuery, String [] docs, StopWords stopWords, FileWriter outputFileWriter) throws Exception {
-		Searcher searcher = new Searcher(idx, docs,stopWords, outputFileWriter);
+
+	private void search(int queryNumber, String searchQuery, String [] docs, FileWriter outputFileWriter, boolean improvedAlgo) throws Exception {
+		Searcher searcher = new Searcher(idx, docs, outputFileWriter, improvedAlgo);
 		searcher.search(queryNumber, searchQuery);
+
 		searcher.close();
 
 	}
