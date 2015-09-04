@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+<<<<<<< HEAD
 
 
 
@@ -16,6 +17,8 @@ import java.nio.file.Paths;
 
 
 
+=======
+>>>>>>> branch 'master' of https://github.com/AvivPeled/InformationRetrievalRanking.git
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -94,6 +97,7 @@ public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IO
             int docId = scoreDoc.doc;
             float docScore = scoreDoc.score;
             System.out.println("docId: " + docId + "\t" + "docScore: " + docScore);
+            
  
             Document doc = searcher.doc(docId);
  
@@ -101,8 +105,8 @@ public Searcher( RAMDirectory idx, String [] docs,StopWords stopWords) throws IO
             // that this Field was not indexed, but (unlike the
             // "contents" field) was stored verbatim and can be
             // retrieved.
-            System.out.println("  " + (i + 1) + ". " + doc.get("title"));
-            System.out.println("Content: " + doc.get("content"));            
+            //System.out.println("  " + (i + 1) + ". " + doc.get("title"));
+            //System.out.println("Content: " + doc.get("content"));            
          }
       }
       System.out.println();
