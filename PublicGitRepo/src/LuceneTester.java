@@ -33,9 +33,6 @@ public class LuceneTester {
 	
 			String[] docs = createInputFiles.getDocs();
 			tester = new LuceneTester();
-			
-			tester.createIndex(docs);
-			//stopWords.calculateFrequency(docs, idx);
 			ReadingParameterFile parameterFile = new ReadingParameterFile(parameterFilePath);
 			parameterFile.readFile();
 
@@ -43,18 +40,33 @@ public class LuceneTester {
 			ReadingQueriesFile queriesFile = new ReadingQueriesFile(					parameterFile.getQueryFileName());
 
 			queriesFile.readFile();
-   
-			String[] dict = queriesFile.getDictonaryNumberQueryToQuery();
+
+
 			if(parameterFile.getRetrievalAlgorithmType()=="improved")
 			{
 				improvedAlgo=true;
+				
+				for(int i=0; i<docs.length;i++)
+				{
+					docs[i]=Stemmer.Stem(docs[i], "English");
+				}	
 			}
+			
+			tester.createIndex(docs);
+			//stopWords.calculateFrequency(docs, idx);
+		
+   
+			String[] dict = queriesFile.getDictonaryNumberQueryToQuery();
 			for(int i=0; i<dict.length; i++)
 			{
 				System.out.println(dict[i]);
 				
 				tester.search(i+1, dict[i],docs, outputFileWriter, improvedAlgo);
 			}
+			System.out.println(dict[3]);
+			
+			
+
 			
 		outputFileWriter.close();
 
