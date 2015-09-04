@@ -20,8 +20,6 @@ import readingInputFiles.ReadingQueriesFile;
 public class LuceneTester {
 
 	static String parameterFilePath = "parameterFile.txt";
-	static String dataDir = "Data";
-	String indexDir = "Index";
 	Indexer indexer;
 	static RAMDirectory idx;
 
@@ -29,29 +27,27 @@ public class LuceneTester {
 		LuceneTester tester;
 		try {
 			// HighFreqTerms f;
-			
+			boolean improvedAlgo=false;
 			idx = new RAMDirectory();
-			CreateInputFiles createInputFiles = new CreateInputFiles(
-					parameterFilePath);
-			
-			createInputFiles.Create(dataDir);
+			CreateInputFiles createInputFiles = new CreateInputFiles(parameterFilePath);
+	
 			String[] docs = createInputFiles.getDocs();
 			tester = new LuceneTester();
 			
 			tester.createIndex(docs);
 			//stopWords.calculateFrequency(docs, idx);
-			ReadingParameterFile parameterFile = new ReadingParameterFile(
-					parameterFilePath);
+			ReadingParameterFile parameterFile = new ReadingParameterFile(parameterFilePath);
 			parameterFile.readFile();
-			ReadingQueriesFile queriesFile = new ReadingQueriesFile(
-					parameterFile.getQueryFileName());
+			ReadingQueriesFile queriesFile = new ReadingQueriesFile(parameterFile.getQueryFileName());
 			queriesFile.readFile();
    
 			String[] dict = queriesFile.getDictonaryNumberQueryToQuery();
 			System.out.println(dict[3]);
-			
-			tester.search(dict[3],docs);
-			
+			if(parameterFile.getRetrievalAlgorithmType()=="improved")
+			{
+				improvedAlgo=true;
+			}
+			tester.search(dict[3],docs,improvedAlgo);
 			
 
 		} catch (Exception e) {
@@ -66,8 +62,8 @@ public class LuceneTester {
 		
 	}
 
-	private void search(String searchQuery, String [] docs) throws Exception {
-		Searcher searcher = new Searcher(idx, docs);
+	private void search(String searchQuery, String [] docs,boolean improvedAlgo) throws Exception {
+		Searcher searcher = new Searcher(idx, docs, improvedAlgo);
 		searcher.search(searchQuery);
 		searcher.close();
 

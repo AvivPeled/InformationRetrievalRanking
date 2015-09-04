@@ -23,38 +23,47 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.Version;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 public class Searcher {
 
 	IndexSearcher searcher;
-
+	boolean improvedFlag;
 	@SuppressWarnings("deprecation")
-	public Searcher(RAMDirectory idx, String[] docs) throws IOException {
+	public Searcher(RAMDirectory idx, String[] docs,boolean improvedFlag) throws IOException {
 		IndexReader reader = IndexReader.open(idx);
 		searcher = new IndexSearcher(reader);
 
 		StopWords.Instance.calculateFrequency(docs, idx);
+		this.improvedFlag = improvedFlag;
 	}
 
+	private String removeStopWordsAndImprove(String queryString) throws Exception
+	{
+		queryString = StopWords.Instance.removeStopWords(queryString);
+		if(improvedFlag==true)
+		{
+			queryString=stemTerm(queryString);
+		}
+		return queryString;
+	}
 	/**
 	 * Searches for the given string in the "content" field
 	 * 
 	 * @throws Exception
 	 */
 	public void search(String queryString) throws Exception {
-
-		queryString = StopWords.Instance.removeStopWords(queryString);
+		queryString=removeStopWordsAndImprove(queryString);
+		
 		SimpleAnalyzer analyzer = new SimpleAnalyzer(Version.LUCENE_36);
 		// Build a Query object
 		QueryParser queryParser = new QueryParser(Version.LUCENE_36, "content",
 				analyzer);
 
 		Query query = queryParser.parse(queryString);
-
 		int hitsPerPage = 10;
 		// Search for the query
-		TopScoreDocCollector collector = TopScoreDocCollector.create(
-				5 * hitsPerPage, true);
+		TopScoreDocCollector collector = TopScoreDocCollector.create(5 * hitsPerPage, true);
 		searcher.search(query, collector);
 
 		ScoreDoc[] hits = collector.topDocs().scoreDocs;
@@ -97,7 +106,10 @@ public class Searcher {
 	 * CorruptIndexException, IOException{ return
 	 * indexSearcher.doc(scoreDoc.doc); }
 	 */
-
+	private String stemTerm (String text) {
+	
+	return Stemmer.Stem(text, "English");
+	}
 	public void close() throws IOException {
 
 		// indexDirectory.close();
