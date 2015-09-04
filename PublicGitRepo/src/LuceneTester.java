@@ -43,7 +43,7 @@ public class LuceneTester {
 			queriesFile.readFile();
 
 
-		//	if(parameterFile.getRetrievalAlgorithmType()=="improved")
+			if(parameterFile.getRetrievalAlgorithmType()=="improved")
 			{
 				improvedAlgo=true;
 				StopWords.Instance.setNumber_stop_words(25);
